@@ -48,9 +48,9 @@ class ID3Algorithm:
 
         for key in data.keys():
             if key != self.target:
-                entropy_attributes = data_entropy - self.entropy_of_attribute(key, data)
-                if best < entropy_attributes:
-                    best = entropy_attributes
+                information_gain = data_entropy - self.entropy_of_attribute(key, data)
+                if best < information_gain:
+                    best = information_gain
                     best_key = key
 
         return best_key
