@@ -66,6 +66,7 @@ class ID3Algorithm:
 
         attrs = np.unique(data[node])
         rtree = {node: {}}
+        # rtree[node]['unknown'] = data.mode()[self.target][0]
 
         for item in attrs:
             sub_set = self.drop_attribute(node, item, data)
