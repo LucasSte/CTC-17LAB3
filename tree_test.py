@@ -9,9 +9,10 @@ del csv['Data']
 del csv['Industry Sector']
 del csv['Employee ou Terceiro']
 del csv['Risco Critico']
+del csv['Countries']
 
-tree_builder = ID3Algorithm(csv, 'Accident Level')
+tree_builder = ID3Algorithm('Accident Level')
 
-tree_builder.build_tree()
+tree_builder.build_tree(csv)
 
 print(tree_builder.tree)
