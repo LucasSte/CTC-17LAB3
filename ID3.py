@@ -1,5 +1,5 @@
 import numpy as np
-import pandas as pd
+
 
 class ID3Algorithm:
 
@@ -7,8 +7,6 @@ class ID3Algorithm:
     tree = None
 
     '''
-
-    @:param data: data is the csv variable created by pd.read_csv
     @:param target: the name of the csv field we want to classify. Ex: 'Accident Level'
     '''
     def __init__(self, target):
