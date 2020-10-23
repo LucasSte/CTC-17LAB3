@@ -2,13 +2,13 @@ import numpy as np
 
 
 class ID3Algorithm:
-
     eps = np.finfo(float).eps
     tree = None
 
     '''
     @:param target: the name of the csv field we want to classify. Ex: 'Accident Level'
     '''
+
     def __init__(self, target):
         self.target = target
 
@@ -34,21 +34,48 @@ class ID3Algorithm:
                 denominator = len(data[attribute][data[attribute] == item])
 
                 frac = numerator / (denominator + self.eps)
-                entropy_aux -= frac*np.log(frac + self.eps)
+                entropy_aux -= frac * np.log(frac + self.eps)
 
             frac_aux = denominator / len(data)
             entropy_calc -= frac_aux * entropy_aux
 
         return abs(entropy_calc)
 
+    def gain_of_attribute(self, attribute, data):
+        return self.entropy(data) - self.entropy_of_attribute(attribute, data)
+
+    def gain_list(self, data):
+        gain_dict = {}
+        for key in data.keys():
+            if key != self.target:
+                information_gain = self.gain_of_attribute(key, data)
+                gain_dict[key] = information_gain
+
+        return sorted(gain_dict.items(), key=lambda x: x[1], reverse=True)
+
+    def _predict(self, input, tree):
+        if isinstance(tree, str):
+            return tree
+        attr = list(tree.keys())[0]
+        val = input[attr]
+        tree = tree[attr]
+        if val not in tree:
+            return 'Error'
+        tree = tree[val]
+        return self._predict(input, tree)
+
+    def predict(self, input):
+        return self._predict(input, self.tree)
+
     def find_best(self, data):
         best = -float("inf")
-        data_entropy = self.entropy(data)
+        # data_entropy = self.entropy(data)
         best_key = None
 
         for key in data.keys():
             if key != self.target:
-                information_gain = data_entropy - self.entropy_of_attribute(key, data)
+                information_gain = self.gain_of_attribute(key, data)
+                # information_gain = data_entropy - self.entropy_of_attribute(key, data)
                 if best < information_gain:
                     best = information_gain
                     best_key = key
