@@ -4,11 +4,11 @@ import numpy as np
 class ID3Algorithm:
     eps = np.finfo(float).eps
     tree = None
-
+    unknown = 0
+    
     '''
     @:param target: the name of the csv field we want to classify. Ex: 'Accident Level'
     '''
-
     def __init__(self, target):
         self.target = target
 
@@ -51,7 +51,7 @@ class ID3Algorithm:
                 information_gain = self.gain_of_attribute(key, data)
                 gain_dict[key] = information_gain
 
-        return sorted(gain_dict.items(), key=lambda x: x[1], reverse=True)
+        return sorted(gain_dict.items(), key=lambda x: x[1], reverse=False)
 
     def _predict(self, input, tree):
         if isinstance(tree, str):
@@ -60,7 +60,8 @@ class ID3Algorithm:
         val = input[attr]
         tree = tree[attr]
         if val not in tree:
-            return 'Error'
+            self.unknown += 1
+            return tree['unknown']
         tree = tree[val]
         return self._predict(input, tree)
 
@@ -69,13 +70,11 @@ class ID3Algorithm:
 
     def find_best(self, data):
         best = -float("inf")
-        # data_entropy = self.entropy(data)
         best_key = None
 
         for key in data.keys():
             if key != self.target:
                 information_gain = self.gain_of_attribute(key, data)
-                # information_gain = data_entropy - self.entropy_of_attribute(key, data)
                 if best < information_gain:
                     best = information_gain
                     best_key = key
@@ -93,7 +92,7 @@ class ID3Algorithm:
 
         attrs = np.unique(data[node])
         rtree = {node: {}}
-        # rtree[node]['unknown'] = data.mode()[self.target][0]
+        rtree[node]['unknown'] = data.mode()[self.target][0]
 
         for item in attrs:
             sub_set = self.drop_attribute(node, item, data)
