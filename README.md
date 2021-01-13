@@ -8,5 +8,6 @@ pandas
 sklearn
 ```
 
-```tree_test.py``` loads a csv, deletes variables with low information gains and runs the algorithm.
-In the end, it prints the decision tree as a json dictionary. Instructions for use can be found inside the file.
+```tree_test.py``` loads a csv, deletes variables with low information gain and runs the algorithm.
+In the end, it prints the decision tree as a json dictionary and runs a test case. 
+Instructions for use can be found inside the file.
